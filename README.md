@@ -1,2 +1,5 @@
-# xxx-days-of-code
-Logs of my 100 days of code challenge
+# I've joined the #100DaysOfCode Challenge
+
+## Contents
+* [Rules](rules.md)
+* [Log - click here to see my progress](log.md)
