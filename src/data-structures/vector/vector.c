@@ -1,14 +1,25 @@
 #include <stdlib.h>
-#include <utils.h>
-#include <vector.h>
 #include <math.h>
+
+#include "data-structures/vector/vector.h"
+#include "utils/utils.h"
 
 // Returns a new vector with capacity equal to 1
 Vector*
 new_vector(void)
 {
-    Vector* vec = xmalloc(sizeof *vec);
-    vec->arr = xmalloc(sizeof *(vec->arr));
+    Vector* vec = malloc(sizeof *vec);
+
+    if (vec == NULL)
+        die(__func__, ERR_ALLOC_FAILED);
+
+    vec->arr = malloc(sizeof *(vec->arr));
+
+    if (vec->arr == NULL) {
+        free_vector(vec);
+        die(__func__, ERR_ALLOC_FAILED);
+    }
+
     vec->capacity = 1;
     vec->size = 0;
     return vec;
@@ -18,6 +29,9 @@ new_vector(void)
 void
 push_back(Vector* vec, VectorItem item)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size < vec->capacity) {
         vec->arr[vec->size] = item;
         vec->size++;
@@ -33,6 +47,9 @@ push_back(Vector* vec, VectorItem item)
 void
 push_front(Vector* vec, VectorItem item)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size < vec->capacity) {
         for (int i = vec->size; i > 0; i--)
             vec->arr[i] = vec->arr[i-1];
@@ -51,6 +68,9 @@ push_front(Vector* vec, VectorItem item)
 VectorItem
 pop_back(Vector* vec)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size > 0) {
         VectorItem item = vec->arr[vec->size-1];
         vec->size--;
@@ -62,13 +82,16 @@ pop_back(Vector* vec)
     }
 
     free_vector(vec);
-    die("vector not long enough to pop back");
+    die(__func__, ERR_OUT_OF_BOUNDS);
 }
 
 // Removes and returns the first item of the list
 VectorItem
 pop_front(Vector* vec)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size > 0) {
         VectorItem item = vec->arr[0];
 
@@ -84,7 +107,7 @@ pop_front(Vector* vec)
     }
 
     free_vector(vec);
-    die("vector not long enough to pop front");
+    die(__func__, ERR_OUT_OF_BOUNDS);
 }
 
 // Finds and returns the index of first list item equal to the given item
@@ -92,6 +115,9 @@ pop_front(Vector* vec)
 int
 find_item(Vector* vec, VectorItem item)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size > 0) {
         for (int i = 0; i < vec->size; i++) {
             if (vec->arr[i] == item)
@@ -106,6 +132,9 @@ find_item(Vector* vec, VectorItem item)
 void
 remove_item(Vector* vec, VectorItem item)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (vec->size > 0) {
         int count = 0;
 
@@ -128,9 +157,12 @@ remove_item(Vector* vec, VectorItem item)
 void
 insert_item(Vector* vec, int index, VectorItem item)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (index < 0 || index > vec->size-1) {
         free_vector(vec);
-        die("index out of bounds");
+        die(__func__, ERR_OUT_OF_BOUNDS);
     }
 
     if (vec->size < vec->capacity) {
@@ -151,9 +183,12 @@ insert_item(Vector* vec, int index, VectorItem item)
 VectorItem
 get(Vector* vec, int index)
 {
+    if (vec == NULL)
+        die(__func__, ERR_NULL_VALUE);
+
     if (index < 0 || index > vec->size-1) {
         free_vector(vec);
-        die("index out of bounds");
+        die(__func__, ERR_OUT_OF_BOUNDS);
     }
 
     return vec->arr[index];
@@ -165,7 +200,13 @@ get(Vector* vec, int index)
 void
 resize(Vector* vec, int new_size)
 {
-    vec->arr = xrealloc(vec->arr, new_size * sizeof *(vec->arr));
+    vec->arr = realloc(vec->arr, new_size * sizeof *(vec->arr));
+
+    if (vec->arr == NULL) {
+        free_vector(vec);
+        die(__func__, ERR_ALLOC_FAILED);
+    }
+
     vec->capacity = new_size;
     return;
 }
@@ -175,7 +216,10 @@ resize(Vector* vec, int new_size)
 void
 free_vector(Vector *vec)
 {
-    free(vec->arr);
-    free(vec);
+    if (vec != NULL) {
+        free(vec->arr);
+        free(vec);
+    }
+
     return;
 }

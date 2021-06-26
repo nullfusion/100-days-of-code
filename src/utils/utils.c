@@ -1,35 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <utils.h>
 
-// wrap malloc to exit if NULL is returned
-void*
-xmalloc(size_t size_to_alloc)
+#include "utils/utils.h"
+
+char*
+get_err_string(Error code)
 {
-    void* mem = (void*)malloc(size_to_alloc);
+    char* errors[] = {
+        "index out of bounds",
+        "failed to allocate memory",
+        "null value passed"
+    };
 
-    if (mem == NULL)
-        die("unable to allocate memory");
-
-    return mem;
+    return errors[code];
 }
 
-// wrap realloc to exit if NULL is returned
-void*
-xrealloc(void* ptr, size_t size_to_alloc)
-{
-    void* mem = (void*)realloc(ptr, size_to_alloc);
-
-    if (mem == NULL)
-        die("unable to reallocate memory");
-
-    return mem;
-}
-
-// utility function to exit with error
 void
-die(char* err)
+die(const char* func_name, Error code)
 {
-    fprintf(stderr, "%s\n", err);
+    fprintf(stderr, "error in (function %s): %s\n", func_name, get_err_string(code));
     exit(EXIT_FAILURE);
 }

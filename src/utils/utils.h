@@ -4,8 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void* xmalloc(size_t size_to_alloc);
-void* xrealloc(void* ptr, size_t site_to_alloc);
-void die(char* err);
+typedef enum Error Error;
+
+enum Error {
+    ERR_OUT_OF_BOUNDS,
+    ERR_ALLOC_FAILED,
+    ERR_NULL_VALUE
+};
+
+void die(const char* func_name, Error err);
+char* get_err_string(Error code);
 
 #endif
