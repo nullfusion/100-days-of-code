@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -250,7 +249,6 @@ remove_index(LinkedList* ll, int index)
     return item;
 }
 
-// TODO
 // Removes the first item in the list equal to the given item
 void
 remove_item(LinkedList* ll, NodeItem item)

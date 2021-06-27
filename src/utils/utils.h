@@ -1,9 +1,6 @@
 #ifndef XDOC_UTILS_H
 #define XDOC_UTILS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef enum Error Error;
 
 enum Error {
