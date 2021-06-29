@@ -1,26 +1,31 @@
+#ifndef XDOC_HASHMAP_H
+#define XDOC_HASHMAP_H
 
-typedef struct HashMapItem HashMapItemT;
+#include <stdbool.h>
+
 typedef struct HashMap HashMapT;
+typedef struct HashMapItem HashMapItemT;
+
+struct HashMap {
+    HashMapItemT* items;
+    int capacity;
+    int size;
+};
 
 struct HashMapItem {
     char* key;
     char* value;
 };
 
-struct HashMap {
-    HashMapItemT** items;
-    int capacity;
-    int size;
-};
+HashMapT* new_hashmap(void);
 
-HashMapT* new_hashmap(int capacity);
+char* get(HashMapT* map, char* key, bool remove);
 
-char* get_key(HashMapT* map, char* key);
-
-void put_key(HashMapT* map, char* key, char* value);
-void remove_key(HashMapT* map, char* key);
+void put(HashMapT* map, char* key, char* value);
 void clear(HashMapT* map);
 
 // INTERNAL FUNCTIONS
-void free_hashmap(HashMapT* map);
 int gen_hash(char* key);
+void free_hashmap(HashMapT* map);
+
+#endif
