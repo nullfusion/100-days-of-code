@@ -109,7 +109,7 @@ void
 clear(HashMapT* map)
 {
     if (map == NULL)
-        die(__func__, ERR_ALLOC_FAILED);
+        die(__func__, ERR_NULL_VALUE);
 
     for (int i = 0; i < map->capacity; i++) {
         map->items[i].key = NULL;
@@ -142,7 +142,7 @@ void
 free_hashmap(HashMapT* map)
 {
     if (map == NULL)
-        die(__func__, ERR_ALLOC_FAILED);
+        die(__func__, ERR_NULL_VALUE);
 
     free(map->items);
     free(map);
